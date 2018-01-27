@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+	<!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
+	<property name="LOG_HOME" value="/app/logs/sp" />
+	<property name="CHARSET" value="UTF-8" />
+	<!--格式化输出：%d表示日期，%-5level：级别从左显示5个字符宽度，%logger日志类，%L行号，%msg：日志消息，%n是换行符 -->
+	<property name="LAYOUT_PATTERN" value="[%-5level] %d [%thread] %logger{36}[%L]-%msg%n" />
+
+	<!-- 控制台输出 -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<chaset>${CHARSET}</chaset>
+			<pattern class="ch.qos.logback.classic.PatternLayout">${LAYOUT_PATTERN}</pattern>
+		</encoder>
+
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+	</appender>
+
+	<!-- 滚动日志文件 -->
+	<appender name="ROLLING"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 日志文件名 -->
+		<file>${LOG_HOME}/spring-quartz.log</file>
+		<!-- 字符集和输出格式 -->
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<chaset>${CHARSET}</chaset>
+			<pattern class="ch.qos.logback.classic.PatternLayout">${LAYOUT_PATTERN}</pattern>
+		</encoder>
+		<!-- 时间为基础的滚动策略 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--历史日志文件 -->
+			<FileNamePattern>${LOG_HOME}/spring-quartz-%d{yyyy-MM-dd}.log</FileNamePattern>
+			<!-- 最多保留30个 -->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+
+		<!-- 日志level -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+	</appender>
+
+	<logger name="org.springframework" level="INFO" />
+	<logger name="org.apache" level="INFO" />
+	<logger name="com.alibaba" level="INFO" />
+	<logger name="org.mybatis" level="INFO" />
+	<logger name="org.jgroups" level="INFO" />
+	<logger name="org.dreams.fly" level="DEBUG" />
+	<!-- 打印执行sql语句日志配置 -->
+    <logger name="dao" level="DEBUG"/>
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ROLLING" />
+	</root>
+
+</configuration>
